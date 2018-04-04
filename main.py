@@ -3,51 +3,13 @@ from flask import Flask, request, redirect, render_template
 app = Flask(__name__)
 app.config['DEBUG'] = True  #Display runtime errors
 
-
-userform = """
-    <!doctype html>
-    <html>
-        <style>
-            .error {{ color: red; }}
-        </style>
-        <h1>User-Signup</h1>
-        <body>
-                <form method='POST'>
-                    <label>Username: 
-                        <input name="user-name" type="text" value="" />
-                    </label>
-                    <span class="error">{username_error}</span>
-                    <br>
-                    <label>Password:     
-                        <input name="user-password" type="password" />
-                    </label>
-                    <span class="error">{password_error}</span>
-                    <br>
-                    <label>Verify Password:      
-                        <input name="verify-password" type="password" />
-                    </label>
-                    <span class="error">{verify_error}</span>
-                    <br>
-                    
-                    <label>Email (optional):
-                        <input name="user-email" type="text" value=""/>
-                    </label>
-                    <span class="error">{email_error}</span>
-                    <br>
-                    <input type="submit" />   
-                </form>
-        </body>
-    </html>
-    """
-
+#User signup home page
 @app.route('/')
-def display_time_form():
-    return userform.format(username_error ='', password_error='',
-        verify_error='', email_error='')
+def index():
+    return render_template('index.html')
 
 @app.route('/', methods=['POST'])
-def validate_time():
-    
+def signup():
     username = request.form["user-name"]
     password = request.form["user-password"]
     verify = request.form["verify-password"]
@@ -61,14 +23,11 @@ def validate_time():
 
     #Username 
     if username == "": 
-        username_error = "Please fill out username box above."
+        username_error = "Please fill out username box."
     elif len(username) <= 3 or len(username) > 20:
         username_error = "Your username can not have less 3 characters or more than 20 characters."
-        username = ""
     elif " " in username:
         username_error = "Your username cannot contain any spaces."
-        username = ""
-
     #Password
     if password == "": 
         password_error = "Enter a password."
@@ -79,7 +38,6 @@ def validate_time():
     #Verify/Compare Password
     if verify == "" or verify != password: 
         verify_error = "Passwords do not match. Please try again."
-        verify = ""
     #Verify Email
     if email == "": 
         email_error = "Please enter a email."
@@ -96,7 +54,7 @@ def validate_time():
         return  redirect('/welcome_page?username={0}'.format(username))   
     #If it has errors then it displays them on same page
     else:
-        return userform.format(
+        return render_template('index.html',
             username = username,
             username_error = username_error,
             password_error = password_error,
@@ -111,10 +69,3 @@ def welcome():
     return render_template('welcome.html', username=username) 
 
 app.run()
-
-'''
-email needs to be optional
-3. For the username and email fields, you should preserve what the user typed, so they don't have
-to retype it. With the password fields, you should clear them, for security reasons.
-4. Use templates (one for the index/home page and one for the welcome page) to render the HTML for your web app.
-'''
