@@ -1,7 +1,7 @@
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, render_template
 
 app = Flask(__name__)
-app.config['DEBUG'] = True
+app.config['DEBUG'] = True  #Display runtime errors
 
 
 userform = """
@@ -13,7 +13,6 @@ userform = """
         <h1>User-Signup</h1>
         <body>
                 <form method='POST'>
-
                     <label>Username: 
                         <input name="user-name" type="text" value="" />
                     </label>
@@ -24,7 +23,6 @@ userform = """
                     </label>
                     <span class="error">{password_error}</span>
                     <br>
-
                     <label>Verify Password:      
                         <input name="verify-password" type="password" />
                     </label>
@@ -109,14 +107,14 @@ def validate_time():
 #Redirect to welcome page
 @app.route("/welcome_page")
 def welcome():
-    time = request.args.get('username')
-    return '<h1>Welcome {0}!</h1>'.format(time)
+    username = request.args.get('username')
+    return render_template('welcome.html', username=username) 
 
 app.run()
 
 '''
+email needs to be optional
 3. For the username and email fields, you should preserve what the user typed, so they don't have
 to retype it. With the password fields, you should clear them, for security reasons.
 4. Use templates (one for the index/home page and one for the welcome page) to render the HTML for your web app.
-
 '''
