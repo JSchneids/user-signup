@@ -39,16 +39,16 @@ def signup():
     if verify == "" or verify != password: 
         verify_error = "Passwords do not match. Please try again."
     #Verify Email
-    if email == "": 
+    if not email == "":
         email_error = "Please enter a email."
-    elif len(email) < 3 or len(email) > 20:
-        email_error = "Password must be between 3 and 20 characters long."
-    elif " " in email:
-        email_error = "Your email cannot contain any spaces."
-    elif "@" not in email:
-        email_error = "Please input a valid email containing a @"
-    elif "." not in email:
-        email_error = "Please input a valid email containing a . period"
+        if len(email) < 3 or len(email) > 20:
+            email_error = "Email must be between 3 and 20 characters long."
+        elif " " in email:
+            email_error = "Your email cannot contain any spaces."
+        elif "@" not in email:
+            email_error = "Please input a valid email containing a @"
+        elif "." not in email:
+            email_error = "Please input a valid email containing a . period"
     #If no errors then redirect
     if not username_error and not password_error and not verify_error and not email_error:
         return  redirect('/welcome_page?username={0}'.format(username))   
